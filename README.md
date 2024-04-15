@@ -31,3 +31,5 @@ mkdir imgs #using this script to copy your images to the imgs folder https://git
 cd picWall
 # Start IDE then run the Spring-boot server 
 ```
+## License
+PicWall is released under the MIT License. 
