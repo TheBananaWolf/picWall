@@ -27,7 +27,7 @@ npm start
 - To start PicWall backEnd, simply launch the application from your command line:
 ```bash
 cd backEnd
-mkdir imgs
+mkdir imgs #using this script to copy your images to the imgs folder https://github.com/TheBananaWolf/WechatDecoder/blob/main/move.py
 cd picWall
 # Start IDE then run the Spring-boot server 
 ```
