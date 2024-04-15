@@ -25,8 +25,7 @@ public class ImageController {
     private final Path imageLocation = Paths.get("E:\\picWall\\imgs");
     List<Path> imageFiles;
 
-    @GetMapping("/showimage")
-    @CrossOrigin("http://127.0.0.1:3000")
+    @GetMapping("/showmedia")
     public ResponseEntity<Resource> getRandomImage() throws MalformedURLException {
 
         if (imageFiles == null || imageFiles.isEmpty()) {
