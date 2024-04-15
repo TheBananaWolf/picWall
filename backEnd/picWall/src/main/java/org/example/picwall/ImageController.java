@@ -23,19 +23,14 @@ import java.util.stream.Stream;
 public class ImageController {
 
     private final Path imageLocation = Paths.get("E:\\picWall\\imgs");
-    @GetMapping("/showimage")
-    public ResponseEntity<Resource> getRandomImage() throws MalformedURLException {
-        List<Path> imageFiles;
-        try (Stream<Path> paths = Files.walk(imageLocation)) {
-            imageFiles = paths
-                    .filter(Files::isRegularFile)
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    List<Path> imageFiles;
 
-        if (imageFiles.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/showimage")
+    @CrossOrigin("http://127.0.0.1:3000")
+    public ResponseEntity<Resource> getRandomImage() throws MalformedURLException {
+
+        if (imageFiles == null || imageFiles.isEmpty()) {
+            imageFiles = getImagesFiles();
         }
 
         Path imagePath = imageFiles.get(new Random().nextInt(imageFiles.size()));
@@ -51,6 +46,17 @@ public class ImageController {
         }
     }
 
+    private List<Path> getImagesFiles(){
+        List<Path> imageFiles;
+        try (Stream<Path> paths = Files.walk(imageLocation)) {
+            imageFiles = paths
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return imageFiles;
+    }
     private String determineContentType(Path imagePath) {
         try {
             String contentType = Files.probeContentType(imagePath);
