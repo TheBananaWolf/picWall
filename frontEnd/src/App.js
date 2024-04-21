@@ -49,7 +49,7 @@ function App() {
             autoPlay
             loop
             muted
-            style={{ maxHeight: "100vh", maxWidth: "100vh" }}
+            style={{ maxHeight: "95vh", maxWidth: "100vh" }}
           />
         );
       case "gif":
@@ -58,7 +58,7 @@ function App() {
           <img
             src={mediaSrc}
             alt="Dynamic media from server"
-            style={{ maxHeight: "100vh", maxWidth: "100vh" }}
+            style={{ maxHeight: "95vh", maxWidth: "100vh" }}
           />
         );
       default:
@@ -71,7 +71,7 @@ function App() {
       className="App"
       style={{
         width: "100vw",
-        height: "100vh",
+        height: "95vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
