@@ -1,4 +1,4 @@
-package org.example.picwall;
+package com.example.picwall;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
