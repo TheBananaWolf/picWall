@@ -1,6 +1,11 @@
 package com.example.picwall;
 
 
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IM4JavaException;
+import org.im4java.core.IMOperation;
+import org.im4java.core.Stream2BufferedImage;
+import org.im4java.process.Pipe;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,7 +15,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,12 +45,60 @@ public class ImageController {
         Path imagePath = imageFiles.get(new SecureRandom().nextInt(imageFiles.size()));
         String filename = imagePath.getFileName().toString();
         String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
+        if ("heic".equalsIgnoreCase(extension)) {
+            return returnJpg(imagePath);
+        }
         if ("livp".equalsIgnoreCase(extension)) {
             return unzipAndReturnJpg(imagePath);
         } else {
             return returnImageFile(imagePath);
         }
+    }
+
+    private ResponseEntity<byte[]> returnJpg(Path imagePath) {
+        try {
+            byte[] heicBytes = Files.readAllBytes(imagePath);
+            byte[] jpegBytes = convertHEICtoJPEG(heicBytes);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(jpegBytes);
+        } catch (IOException | InterruptedException | IM4JavaException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    public byte[] convertHEICtoJPEG(byte[] heicBytes) throws IOException, InterruptedException, IM4JavaException, IM4JavaException {
+        IMOperation op = new IMOperation();
+        op.addImage("-");
+        op.addImage("jpeg:-");
+        File tempFile = File.createTempFile("temp", ".heic");
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(heicBytes);
+        }
+        FileInputStream fis = new FileInputStream(tempFile);
+        Pipe pipeIn  = new Pipe(fis,null);
+        ConvertCmd convert = new ConvertCmd();
+        convert.setSearchPath("C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI");
+        convert.setInputProvider(pipeIn);
+        Stream2BufferedImage s2b = new Stream2BufferedImage();
+        convert.setOutputConsumer(s2b);
+        convert.run(op);
+        BufferedImage image = s2b.getImage();
+        byte[] imageBytes = imageToBytes(image);
+        fis.close();
+        return imageBytes;
+
+    }
+
+
+    private static byte[] imageToBytes(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpeg", baos);
+        baos.flush();
+        byte[] imageBytes = baos.toByteArray();
+        baos.close();
+        return imageBytes;
     }
 
     private ResponseEntity<byte[]> unzipAndReturnJpg(Path zipPath) throws IOException, InterruptedException {
