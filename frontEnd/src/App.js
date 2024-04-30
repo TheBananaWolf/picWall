@@ -73,7 +73,7 @@ function App() {
       className="App"
       style={{
         width: "100vw",
-        height: "100vh",
+        height: "95vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
