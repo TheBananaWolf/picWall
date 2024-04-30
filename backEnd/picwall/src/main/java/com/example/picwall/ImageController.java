@@ -30,6 +30,8 @@ import java.util.stream.Stream;
 
 @RestController
 public class ImageController {
+    @Value("${imagemagick.localtion.windows}")
+    private String ImagemagickLocaltionWindows;
 
     @Value("${app.image.location}")
     private Path imageLocation;
@@ -79,7 +81,7 @@ public class ImageController {
         FileInputStream fis = new FileInputStream(tempFile);
         Pipe pipeIn  = new Pipe(fis,null);
         ConvertCmd convert = new ConvertCmd();
-        convert.setSearchPath("C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI");
+//        convert.setSearchPath(ImagemagickLocaltionLinux);
         convert.setInputProvider(pipeIn);
         Stream2BufferedImage s2b = new Stream2BufferedImage();
         convert.setOutputConsumer(s2b);
@@ -123,6 +125,8 @@ public class ImageController {
     private ResponseEntity<byte[]> returnImageFile(Path imagePath) throws IOException {
         Resource image = new UrlResource(imagePath.toUri());
         if (image.exists() && image.isReadable()) {
+            System.out.println(imagePath);
+
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(Files.probeContentType(imagePath)))
                     .body(Files.readAllBytes(imagePath));

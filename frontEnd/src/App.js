@@ -34,12 +34,14 @@ function App() {
     };
 
     fetchMedia();
-    const intervalId = setInterval(fetchMedia, 8000); // Interval can be adjusted based on your needs
+    const intervalId = setInterval(fetchMedia, 30000); // Interval can be adjusted based on your needs
 
     return () => clearInterval(intervalId);
   }, [url]);
 
   const renderMedia = () => {
+    console.log(mediaSrc)
+
     switch (mediaType) {
       case "video":
         return (
@@ -57,7 +59,7 @@ function App() {
         return (
           <img
             src={mediaSrc}
-            alt="Dynamic media from server"
+            alt={mediaSrc}
             style={{ maxHeight: "95vh", maxWidth: "100vh" }}
           />
         );
@@ -71,7 +73,7 @@ function App() {
       className="App"
       style={{
         width: "100vw",
-        height: "95vh",
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
