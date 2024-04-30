@@ -4,7 +4,7 @@ Welcome to PicWall! PicWall is a dynamic wallpaper application designed to trans
 
 ## Features
 
-- **Rapid Refresh**: Enjoy a new image on your screen every 8 seconds.
+- **Rapid Refresh**: Enjoy a new image on your screen every 30 seconds.
 - **Browser Integration**: Seamlessly integrates with your web browser to enhance your browsing experience.
 - **High-Quality Images**: Features a collection of high-resolution pictures perfect for any display.
 - **User-Friendly**: Easy setup and simple interface for hassle-free navigation.
