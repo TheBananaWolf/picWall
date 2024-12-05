@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 function App() {
   const url = "http://127.0.0.1:8080/showmedia"; // Backend endpoint
-  const numberOfCells = 20; // Total number of cells
+  const numberOfCells = 2000; // Total number of cells
 
   const [mediaItems, setMediaItems] = useState([]);
 
@@ -113,10 +113,10 @@ function App() {
 
   return (
     <div style={styles.masonryContainer}>
-      {Array.from({ length: 4 }).map((_, columnIndex) => (
+      {Array.from({ length: 8 }).map((_, columnIndex) => (
         <div key={columnIndex} style={styles.masonryColumn}>
           {mediaItems
-            .filter((_, index) => index % 4 === columnIndex)
+            .filter((_, index) => index % 8 === columnIndex)
             .map((item) => (
               <div
                 key={item.id}

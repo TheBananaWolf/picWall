@@ -81,7 +81,7 @@ public class ImageController {
         FileInputStream fis = new FileInputStream(tempFile);
         Pipe pipeIn  = new Pipe(fis,null);
         ConvertCmd convert = new ConvertCmd();
-//        convert.setSearchPath(ImagemagickLocaltionLinux);
+        convert.setSearchPath(ImagemagickLocaltionWindows);
         convert.setInputProvider(pipeIn);
         Stream2BufferedImage s2b = new Stream2BufferedImage();
         convert.setOutputConsumer(s2b);
@@ -125,13 +125,19 @@ public class ImageController {
     private ResponseEntity<byte[]> returnImageFile(Path imagePath) throws IOException {
         Resource image = new UrlResource(imagePath.toUri());
         if (image.exists() && image.isReadable()) {
-            System.out.println(imagePath);
+            String mimeType = Files.probeContentType(imagePath);
+            if (mimeType == null) {
+                mimeType = "image/jpeg"; // 默认 MIME 类型
+                System.out.println("MIME type not found, defaulting to: " + mimeType);
+            }
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(Files.probeContentType(imagePath)))
+                    .contentType(MediaType.parseMediaType(mimeType))
                     .body(Files.readAllBytes(imagePath));
+        } else {
+            System.err.println("File not found or not readable: " + imagePath);
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
     private List<Path> getImagesFiles() {
